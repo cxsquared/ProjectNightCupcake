@@ -18,7 +18,7 @@ namespace projectnightcupcake
         // Update is called once per frame
         void Update()
         {
-            if (Player != null && Input.GetAxis("Interact") == 0)
+            if (Player != null && Input.GetButtonDown("Interact"))
             {
                 Player = null;
                 transform.parent = null;
@@ -28,9 +28,12 @@ namespace projectnightcupcake
 
         override public void Interact(GameObject player)
         {
-            Player = player.GetComponentInChildren<Camera>().gameObject;
-            transform.parent = Player.transform;
-            ThisRigidbody.isKinematic = true;
+            if (Player == null)
+            {
+                Player = player.GetComponentInChildren<Camera>().gameObject;
+                transform.parent = Player.transform;
+                ThisRigidbody.isKinematic = true;
+            }
         }
     }
 }

@@ -14,6 +14,8 @@ namespace projectnightcupcake
         [SerializeField]
         float _reachLength = 10f;
 
+        private Inventory PlayerInventory { get; set; }
+
         private Camera PlayerCamera { get; set; }
 
         // Use this for initialization
@@ -24,7 +26,7 @@ namespace projectnightcupcake
         // Update is called once per frame
         void Update () {
             
-            if (Input.GetAxis("Interact") != 0)
+            if (Input.GetButtonDown("Interact"))
             {
                 var rayStartLocation = PlayerCamera.transform.position;
                 var rayDirection = PlayerCamera.transform.forward;
