@@ -3,24 +3,28 @@
 public class Timer : MonoBehaviour {
 
     public delegate void OnTimerComplete(Timer t);
-    private OnTimerComplete OnComplete { get; set; }
+
+    private OnTimerComplete _onComplete = null;
+    private OnTimerComplete OnComplete { get { return _onComplete; } set { _onComplete = value; } }
 
     private float ElapsedTime { get; set; }
     private float TimerLength { get; set; }
-    private bool Active { get; set; }
-    private int Loops { get; set; }
+
+    [SerializeField]
+    private bool _active = false;
+    public  bool Active { get { return _active; } private set { _active = value; } }
+
+    [SerializeField]
+    private int _loops = 1;
+    public int Loops { get { return _loops; } private set { _loops = value; } }
+
     private int CurrentLoop { get; set; }
 
-    public Timer(float timerLength)
+    public Timer StartTimer(float timerLength, int loops, OnTimerComplete onComplete=null)
     {
-        OnComplete = null;
         TimerLength = timerLength;
-        Loops = 1;
-        Active = false;
-    }
-
-    public Timer Start()
-    {
+        Loops = loops;
+        OnComplete = onComplete;
         Active = true;
         CurrentLoop = 0;
         ElapsedTime = 0f;
@@ -43,6 +47,7 @@ public class Timer : MonoBehaviour {
                 CurrentLoop++;
                 if (OnComplete != null)
                 {
+                    Debug.Log("Timer complete calling " + OnComplete.GetType().Name);
                     OnComplete(this);
                 }
                 if (CurrentLoop >= Loops)
