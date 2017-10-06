@@ -56,17 +56,18 @@ namespace projectnightcupcake
                 Player = null;
                 //ThisRigidbody.isKinematic = false;
                 ThisRigidbody.useGravity = true;
+                ThisRigidbody.ResetInertiaTensor();
                 ThisRigidbody.constraints = RigidbodyConstraints.None;
                 Timer.StartTimer(PickupDelay, 1, PickUpReset);
             }
             else if (Player != null)
             {
                 var newPosition = Player.transform.position + (Player.transform.forward.normalized * HoverDistance);
-                transform.position = Vector3.MoveTowards(transform.position, newPosition, Time.deltaTime * HoverSpeed);
+                ThisRigidbody.MovePosition(Vector3.MoveTowards(transform.position, newPosition, Time.deltaTime * HoverSpeed));
                 var newRotation = Player.transform.rotation.eulerAngles;
                 newRotation.x = StartingOrientation.eulerAngles.x;
                 newRotation.z = StartingOrientation.eulerAngles.y;
-                transform.rotation = Quaternion.Euler(newRotation); 
+                ThisRigidbody.MoveRotation(Quaternion.Euler(newRotation));
             }
         }
 
@@ -85,7 +86,7 @@ namespace projectnightcupcake
             if (Player == null && CanBePickedUp == true)
             {
                 Player = player.GetComponentInChildren<Camera>().gameObject;
-                ThisRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+                //ThisRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
                 //ThisRigidbody.isKinematic = true;
                 ThisRigidbody.useGravity = false;
                 CanBePickedUp = false;
