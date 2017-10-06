@@ -6,17 +6,35 @@ namespace projectnightcupcake
 {
     public class Player : MonoBehaviour {
 
+        [SerializeField]
+        float _reachLength = 10f;
         float ReachLength
         {
             get { return _reachLength; }
             set { _reachLength = value; }
         }
-        [SerializeField]
-        float _reachLength = 10f;
 
         private Inventory PlayerInventory { get; set; }
 
         private Camera PlayerCamera { get; set; }
+
+        [SerializeField]
+        private IInteractable _currentObject;
+        private IInteractable CurrentObject
+        {   get
+            {
+                return _currentObject;
+            }
+            set
+            {
+                _currentObject = value;
+                if (_currentObject != null)
+                {
+                    Debug.Log("Sending on hover enter message to " + _currentObject.name);
+                    _currentObject.OnHoverEnter(gameObject);
+                }
+            }
+        }
 
         // Use this for initialization
         void Start () {
@@ -25,23 +43,44 @@ namespace projectnightcupcake
         
         // Update is called once per frame
         void Update () {
-            
-            if (Input.GetButtonDown("Interact"))
+
+            var rayStartLocation = PlayerCamera.transform.position;
+            var rayDirection = PlayerCamera.transform.forward;
+            RaycastHit ray;
+ 
+            if (Physics.Raycast(rayStartLocation, rayDirection, out ray, ReachLength))
             {
-                var rayStartLocation = PlayerCamera.transform.position;
-                var rayDirection = PlayerCamera.transform.forward;
-                RaycastHit ray;
-                if (Physics.Raycast(rayStartLocation, rayDirection, out ray, ReachLength))
+                var interactComponent = ray.transform.GetComponent<IInteractable>();
+                if (interactComponent != null)
                 {
-                    var interactComponent = ray.transform.GetComponent<IInteractable>();
-                    if (interactComponent != null)
+                    if (CurrentObject == null || CurrentObject != interactComponent)
+                    {
+                        CallOnHoverExitOnCurrentObject();
+                        CurrentObject = interactComponent;
+                    }
+
+                    if (Input.GetButtonDown("Interact"))
                     {
                         Debug.Log("Sending hit message to " + interactComponent.name);
-                        interactComponent.Interact(gameObject);
+                        CurrentObject.Interact(gameObject);
                     }
                 }
-                Debug.DrawRay(rayStartLocation, rayDirection * ReachLength, Color.cyan, 10f);
             }
+            else if (CurrentObject != null)
+            {
+                CallOnHoverExitOnCurrentObject();
+                CurrentObject = null;
+            }
+        }
+
+        private void CallOnHoverExitOnCurrentObject()
+        {
+            if (CurrentObject != null)
+            {
+                Debug.Log("Sending on hover exit message to " + CurrentObject.name);
+                CurrentObject.OnHoverExit(gameObject);
+            }
+            CurrentObject = null;
         }
     }
 }

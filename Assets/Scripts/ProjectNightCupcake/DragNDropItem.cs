@@ -2,6 +2,8 @@
 
 namespace projectnightcupcake
 {
+
+    [RequireComponent(typeof(Rigidbody))]
     public class DragNDropItem : IInteractable
     {
         private Rigidbody ThisRigidbody { get; set; }
@@ -34,11 +36,16 @@ namespace projectnightcupcake
         private float _pickupDelay = .25f;
         public float PickupDelay { get { return _pickupDelay; } private set { _pickupDelay = value; } }
 
+        [SerializeField]
+        private Quaternion _startingOrientation;
+        private Quaternion StartingOrientation { get; set; }
+
         // Use this for initialization
         void Start()
         {
             Timer = gameObject.AddComponent<Timer>();
             ThisRigidbody = GetComponent<Rigidbody>();
+            StartingOrientation = transform.rotation;
         }
 
         // Update is called once per frame
@@ -47,14 +54,19 @@ namespace projectnightcupcake
             if (Player != null && Input.GetButtonDown("Interact") && CanBeDropped)
             {
                 Player = null;
-                transform.parent = null;
-                ThisRigidbody.isKinematic = false;
+                //ThisRigidbody.isKinematic = false;
+                ThisRigidbody.useGravity = true;
+                ThisRigidbody.constraints = RigidbodyConstraints.None;
                 Timer.StartTimer(PickupDelay, 1, PickUpReset);
             }
             else if (Player != null)
             {
-                Vector3 newPosition = Player.transform.position + (Player.transform.forward.normalized * HoverDistance);
+                var newPosition = Player.transform.position + (Player.transform.forward.normalized * HoverDistance);
                 transform.position = Vector3.MoveTowards(transform.position, newPosition, Time.deltaTime * HoverSpeed);
+                var newRotation = Player.transform.rotation.eulerAngles;
+                newRotation.x = StartingOrientation.eulerAngles.x;
+                newRotation.z = StartingOrientation.eulerAngles.y;
+                transform.rotation = Quaternion.Euler(newRotation); 
             }
         }
 
@@ -73,10 +85,13 @@ namespace projectnightcupcake
             if (Player == null && CanBePickedUp == true)
             {
                 Player = player.GetComponentInChildren<Camera>().gameObject;
-                ThisRigidbody.isKinematic = true;
+                ThisRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+                //ThisRigidbody.isKinematic = true;
+                ThisRigidbody.useGravity = false;
                 CanBePickedUp = false;
                 CanBeDropped = false;
                 Timer.StartTimer(PickupDelay, 1, DropReset);
+                transform.rotation = StartingOrientation;
             }
         }
     }
