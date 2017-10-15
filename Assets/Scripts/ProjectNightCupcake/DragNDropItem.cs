@@ -86,8 +86,6 @@ namespace projectnightcupcake
             if (Player == null && CanBePickedUp == true)
             {
                 Player = player.GetComponentInChildren<Camera>().gameObject;
-                //ThisRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-                //ThisRigidbody.isKinematic = true;
                 ThisRigidbody.useGravity = false;
                 CanBePickedUp = false;
                 CanBeDropped = false;
