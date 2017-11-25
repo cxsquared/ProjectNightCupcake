@@ -186,6 +186,20 @@ Prefab:
       propertyPath: _alphaFadeRate
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4236827537578394, guid: 8d7e7514c857e6c4b850ef18caf222d8, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114662956869395260, guid: 8d7e7514c857e6c4b850ef18caf222d8,
+        type: 2}
+      propertyPath: advancedSettings.shellOffset
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114662956869395260, guid: 8d7e7514c857e6c4b850ef18caf222d8,
+        type: 2}
+      propertyPath: movementSettings.CrouchMultiplier
+      value: 0.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d7e7514c857e6c4b850ef18caf222d8, type: 2}
   m_IsPrefabParent: 0

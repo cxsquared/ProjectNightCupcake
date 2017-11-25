@@ -15,13 +15,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
             public float BackwardSpeed = 4.0f;  // Speed when walking backwards
             public float StrafeSpeed = 4.0f;    // Speed when walking sideways
             public float RunMultiplier = 2.0f;   // Speed when sprinting
+            public float CrouchMultiplier = 0.5f; // Speed when crouched
 	        public KeyCode RunKey = KeyCode.LeftShift;
+            public KeyCode CrouchKey = KeyCode.LeftControl;
             public float JumpForce = 30f;
             public AnimationCurve SlopeCurveModifier = new AnimationCurve(new Keyframe(-90.0f, 1.0f), new Keyframe(0.0f, 1.0f), new Keyframe(90.0f, 0.0f));
             [HideInInspector] public float CurrentTargetSpeed = 8f;
 
 #if !MOBILE_INPUT
             private bool m_Running;
+            private bool m_Crouching;
 #endif
 
             public void UpdateDesiredTargetSpeed(Vector2 input)
@@ -44,7 +47,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 					CurrentTargetSpeed = ForwardSpeed;
 				}
 #if !MOBILE_INPUT
-	            if (Input.GetKey(RunKey))
+	            if (Input.GetKey(RunKey) && !Input.GetKey(CrouchKey))
 	            {
 		            CurrentTargetSpeed *= RunMultiplier;
 		            m_Running = true;
@@ -53,6 +56,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
 	            {
 		            m_Running = false;
 	            }
+
+                if (Input.GetKey(CrouchKey))
+                {
+                    CurrentTargetSpeed *= CrouchMultiplier;
+                    m_Crouching = true; 
+                }
+                else
+                {
+                    m_Crouching = false;
+                }
 #endif
             }
 
@@ -60,6 +73,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
             public bool Running
             {
                 get { return m_Running; }
+            }
+
+            public bool Crouching
+            {
+                get { return m_Crouching; }
             }
 #endif
         }
@@ -74,6 +92,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             public bool airControl; // can the user control the direction that is being moved in the air
             [Tooltip("set it to 0.1 or more if you get stuck in wall")]
             public float shellOffset; //reduce the radius by that ratio to avoid getting stuck in wall (a value of 0.1f is nice)
+            public float crouchOffset = 0.75f; // Amount to reduce the player Y scale by
         }
 
 
@@ -133,6 +152,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
             {
                 m_Jump = true;
+            }
+
+            if (movementSettings.Crouching)
+            {
+                transform.localScale = new Vector3(transform.localScale.x, advancedSettings.crouchOffset, transform.localScale.y);
+            }
+            else
+            {
+                transform.localScale = new Vector3(1, 1, 1);
             }
         }
 
