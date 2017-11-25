@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d003ca397bc979d49beb34b7b33d8166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _name: 
   _player: {fileID: 0}
   _timer: {fileID: 0}
   _canBePickedUp: 1
@@ -179,6 +180,11 @@ Prefab:
     - target: {fileID: 4236827537578394, guid: 8d7e7514c857e6c4b850ef18caf222d8, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114754374184328644, guid: 8d7e7514c857e6c4b850ef18caf222d8,
+        type: 2}
+      propertyPath: _alphaFadeRate
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d7e7514c857e6c4b850ef18caf222d8, type: 2}
@@ -392,6 +398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d003ca397bc979d49beb34b7b33d8166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _name: 
   _player: {fileID: 0}
   _timer: {fileID: 0}
   _canBePickedUp: 1

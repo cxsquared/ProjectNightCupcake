@@ -93,5 +93,19 @@ namespace projectnightcupcake
                 transform.rotation = StartingOrientation;
             }
         }
+
+        public override void OnHoverEnter(GameObject player)
+        {
+            base.OnHoverEnter(player);
+
+            Crosshair.SetAlpha(1f);
+        }
+
+        public override void OnHoverExit(GameObject player)
+        {
+            base.OnHoverExit(player);
+
+            Crosshair.ResetAlpha();
+        }
     }
 }
