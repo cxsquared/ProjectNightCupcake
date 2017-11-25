@@ -108,12 +108,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: 
   _player: {fileID: 0}
-  _timer: {fileID: 0}
+  _dropTimer: {fileID: 0}
   _canBePickedUp: 1
   _canBeDropped: 0
   _hoverDistance: 1.5
   _hoverSpeed: 5
   _pickupDelay: 0.25
+  _throwForceMin: 100
+  _throwForceMax: 1000
+  _timeToMaxThrow: 2
+  _throwing: 0
   _startingOrientation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!54 &403239952
 Rigidbody:
@@ -414,12 +418,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: 
   _player: {fileID: 0}
-  _timer: {fileID: 0}
+  _dropTimer: {fileID: 0}
   _canBePickedUp: 1
   _canBeDropped: 0
   _hoverDistance: 1.5
   _hoverSpeed: 5
   _pickupDelay: 0.25
+  _throwForceMin: 1
+  _throwForceMax: 2
+  _timeToMaxThrow: 2
+  _throwing: 0
   _startingOrientation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!54 &1384110723
 Rigidbody:

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Diagnostics;
+using UnityEngine;
 
 namespace projectnightcupcake
 {
@@ -13,8 +14,12 @@ namespace projectnightcupcake
         public GameObject Player { get { return _player; } private set { _player = value; } }
 
         [SerializeField]
-        private Timer _timer;
-        private Timer Timer { get { return _timer; } set { _timer = value; } }
+        private Timer _dropTimer;
+        private Timer DropTimer { get { return _dropTimer; } set { _dropTimer = value; } }
+
+        [SerializeField]
+        private Stopwatch _throwTimer;
+        private Stopwatch ThrowTimer { get { return _throwTimer; } set { _throwTimer = value; } }
 
         [SerializeField]
         private bool _canBePickedUp = true;
@@ -37,13 +42,30 @@ namespace projectnightcupcake
         public float PickupDelay { get { return _pickupDelay; } private set { _pickupDelay = value; } }
 
         [SerializeField]
+        private float _throwForceMin = 1f;
+        public float ThrowForceMin { get { return _throwForceMin; } private set { _throwForceMin = value; } }
+
+        [SerializeField]
+        private float _throwForceMax = 2f;
+        public float ThrowForceMax { get { return _throwForceMax; } private set { _throwForceMax = value; } }
+
+        [SerializeField]
+        private float _timeToMaxThrow = 2f;
+        public float TimerToMaxThrow { get { return _timeToMaxThrow; } private set { _timeToMaxThrow = value; } }
+
+        [SerializeField]
+        private bool _throwing = false;
+        public bool Throwing { get { return _throwing; } private set { _throwing = value; } }
+
+        [SerializeField]
         private Quaternion _startingOrientation;
         private Quaternion StartingOrientation { get; set; }
 
         // Use this for initialization
         void Start()
         {
-            Timer = gameObject.AddComponent<Timer>();
+            DropTimer = gameObject.AddComponent<Timer>();
+            ThrowTimer = new Stopwatch();
             ThisRigidbody = GetComponent<Rigidbody>();
             StartingOrientation = transform.rotation;
         }
@@ -51,23 +73,35 @@ namespace projectnightcupcake
         // Update is called once per frame
         void Update()
         {
-            if (Player != null && Input.GetButtonDown("Interact") && CanBeDropped)
+            if (Player == null)
+                return;
+
+            if (Input.GetButtonDown("Throw") && !Throwing)
             {
-                Player = null;
-                //ThisRigidbody.isKinematic = false;
-                ThisRigidbody.useGravity = true;
-                ThisRigidbody.ResetInertiaTensor();
-                ThisRigidbody.constraints = RigidbodyConstraints.None;
-                Timer.StartTimer(PickupDelay, 1, PickUpReset);
+                Throwing = true;
+                ThrowTimer.Reset();
+                ThrowTimer.Start();
             }
-            else if (Player != null)
+
+            if (Input.GetButtonDown("Interact") && CanBeDropped)
             {
-                var newPosition = Player.transform.position + (Player.transform.forward.normalized * HoverDistance);
-                ThisRigidbody.MovePosition(Vector3.MoveTowards(transform.position, newPosition, Time.deltaTime * HoverSpeed));
-                var newRotation = Player.transform.rotation.eulerAngles;
-                newRotation.x = StartingOrientation.eulerAngles.x;
-                newRotation.z = StartingOrientation.eulerAngles.y;
-                ThisRigidbody.MoveRotation(Quaternion.Euler(newRotation));
+                DropItem();
+            }
+            else if (Input.GetButtonUp("Throw") && CanBeDropped)
+            {
+                var playerVelocity = Player.GetComponentInParent<Rigidbody>().velocity;
+                var baseThrowForce = Mathf.Lerp(ThrowForceMin, ThrowForceMax, (float)ThrowTimer.Elapsed.TotalSeconds / TimerToMaxThrow);
+                var throwingVelocity = Player.transform.forward * Mathf.Clamp(baseThrowForce, ThrowForceMin, ThrowForceMax);
+                UnityEngine.Debug.Log("Throwing itme with force " + throwingVelocity + "   Player velocity = " );
+                DropItem();
+                ThrowTimer.Stop();
+                Throwing = false;
+
+                ThisRigidbody.AddForce(throwingVelocity);
+            }
+            else 
+            {
+                UpdateHeldItemPosition();
             }
         }
 
@@ -81,6 +115,26 @@ namespace projectnightcupcake
             CanBeDropped = true;
         }
 
+        void DropItem()
+        {
+                Player = null;
+                //ThisRigidbody.isKinematic = false;
+                ThisRigidbody.useGravity = true;
+                ThisRigidbody.ResetInertiaTensor();
+                ThisRigidbody.constraints = RigidbodyConstraints.None;
+                DropTimer.StartTimer(PickupDelay, 1, PickUpReset);
+        }
+
+        void UpdateHeldItemPosition()
+        {
+                var newPosition = Player.transform.position + (Player.transform.forward.normalized * HoverDistance);
+                ThisRigidbody.MovePosition(Vector3.MoveTowards(transform.position, newPosition, Time.deltaTime * HoverSpeed));
+                var newRotation = Player.transform.rotation.eulerAngles;
+                newRotation.x = StartingOrientation.eulerAngles.x;
+                newRotation.z = StartingOrientation.eulerAngles.y;
+                ThisRigidbody.MoveRotation(Quaternion.Euler(newRotation));
+        }
+
         override public void Interact(GameObject player)
         {
             if (Player == null && CanBePickedUp == true)
@@ -89,7 +143,7 @@ namespace projectnightcupcake
                 ThisRigidbody.useGravity = false;
                 CanBePickedUp = false;
                 CanBeDropped = false;
-                Timer.StartTimer(PickupDelay, 1, DropReset);
+                DropTimer.StartTimer(PickupDelay, 1, DropReset);
                 transform.rotation = StartingOrientation;
             }
         }
