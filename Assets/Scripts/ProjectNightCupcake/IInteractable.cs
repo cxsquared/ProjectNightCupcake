@@ -3,7 +3,7 @@
 namespace projectnightcupcake
 {
     [RequireComponent(typeof(Collider))]
-    public abstract class IInteractable : MonoBehaviour{
+    public abstract class IInteractable : MonoBehaviour {
 
         [SerializeField]
         private string _name;
@@ -14,5 +14,7 @@ namespace projectnightcupcake
         public virtual void OnHoverEnter(GameObject player) { }
 
         public virtual void OnHoverExit(GameObject player) { }
+
+        public virtual bool IsInteracting(GameObject player) { return false; }
     }
 }

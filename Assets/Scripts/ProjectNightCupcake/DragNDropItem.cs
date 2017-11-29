@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace projectnightcupcake
 {
-
     [RequireComponent(typeof(Rigidbody))]
     public class DragNDropItem : IInteractable
     {
@@ -162,6 +161,11 @@ namespace projectnightcupcake
 
             Crosshair.ResetAlpha();
             UiController.Instance.SetItemDescription("");
+        }
+
+        public override bool IsInteracting(GameObject player)
+        {
+            return Player != null;
         }
     }
 }

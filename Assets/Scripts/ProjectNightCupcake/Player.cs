@@ -66,7 +66,7 @@ namespace projectnightcupcake
                     }
                 }
             }
-            else if (CurrentObject != null)
+            else if (CurrentObject != null && !CurrentObject.IsInteracting(gameObject))
             {
                 CallOnHoverExitOnCurrentObject();
                 CurrentObject = null;
