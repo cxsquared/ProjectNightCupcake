@@ -153,6 +153,7 @@ namespace projectnightcupcake
             base.OnHoverEnter(player);
 
             Crosshair.SetAlpha(1f);
+            UiController.Instance.SetItemDescription(name);
         }
 
         public override void OnHoverExit(GameObject player)
@@ -160,6 +161,7 @@ namespace projectnightcupcake
             base.OnHoverExit(player);
 
             Crosshair.ResetAlpha();
+            UiController.Instance.SetItemDescription("");
         }
     }
 }
