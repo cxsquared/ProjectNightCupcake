@@ -329,6 +329,36 @@ Prefab:
       propertyPath: movementSettings.CrouchMultiplier
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 114662956869395260, guid: 8d7e7514c857e6c4b850ef18caf222d8,
+        type: 2}
+      propertyPath: movementSettings.ForwardSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114662956869395260, guid: 8d7e7514c857e6c4b850ef18caf222d8,
+        type: 2}
+      propertyPath: movementSettings.BackwardSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114662956869395260, guid: 8d7e7514c857e6c4b850ef18caf222d8,
+        type: 2}
+      propertyPath: movementSettings.StrafeSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114662956869395260, guid: 8d7e7514c857e6c4b850ef18caf222d8,
+        type: 2}
+      propertyPath: movementSettings.RunMultiplier
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114662956869395260, guid: 8d7e7514c857e6c4b850ef18caf222d8,
+        type: 2}
+      propertyPath: movementSettings.JumpForce
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114662956869395260, guid: 8d7e7514c857e6c4b850ef18caf222d8,
+        type: 2}
+      propertyPath: advancedSettings.slowDownRate
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d7e7514c857e6c4b850ef18caf222d8, type: 2}
   m_IsPrefabParent: 0
@@ -475,6 +505,9 @@ MonoBehaviour:
   _timeToMaxThrow: 2
   _throwing: 0
   _startingOrientation: {x: 0, y: 0, z: 0, w: 0}
+  _stuckDropTollerance: 0.75
+  _distanceToCollisionCheck: 3
+  _locationToMoveTo: {x: 0, y: 0, z: 0}
 --- !u!65 &898371531
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -641,6 +674,9 @@ MonoBehaviour:
   _timeToMaxThrow: 2
   _throwing: 0
   _startingOrientation: {x: 0, y: 0, z: 0, w: 0}
+  _stuckDropTollerance: 0.75
+  _distanceToCollisionCheck: 3
+  _locationToMoveTo: {x: 0, y: 0, z: 0}
 --- !u!54 &1384110723
 Rigidbody:
   m_ObjectHideFlags: 0
